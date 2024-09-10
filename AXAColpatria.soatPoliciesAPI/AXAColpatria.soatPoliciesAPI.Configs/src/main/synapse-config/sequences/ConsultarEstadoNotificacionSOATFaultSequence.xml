@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ConsultarEstadoNotificacionSOATFaultSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log category="ERROR" level="full"/>
+    <switch source="$ctx:Status">
+        <case regex="false">
+            <payloadFactory media-type="xml" template-type="freemarker">
+                <format><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://AXAColpatria.Tarea.GestionPolizasSOAT.Notificacion_V2.Esquemas/ConsultarEstadoNotificacionSISEResp/V1.0">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <v1:ConsultarEstadoNotificacionSISEResp>
+         <Header>
+            <Criticidad>Información</Criticidad>
+            <IdCorrelacionConsumidor/>
+            <IdTransaccion>${ctx.MessageID2}</IdTransaccion>
+            <RtaCodCanal>332</RtaCodCanal>
+            <RtaCodHost>332</RtaCodHost>
+            <RtaDescCanal>${ctx.ProcessMessage}</RtaDescCanal>
+            <RtaDescHost>${ctx.ProcessMessage}</RtaDescHost>
+            <Metodo>ProcessResponseSoat</Metodo>
+            <Categoria>Error Negocio</Categoria>
+            <FlagException>true</FlagException>
+         </Header>
+         <Body>
+            <#if ctx.IdProcess?has_content> 
+            <IdProcess>${ctx.IdProcess}</IdProcess>
+            </#if>
+            <#if ctx.IdProcess?has_content> 
+            <Process>${ctx.ProcessMessage}</Process>
+            </#if>
+            <#if ctx.DateProcess?has_content> 
+            <DateProcess>${ctx.DateProcess}</DateProcess>
+            </#if>
+            <#if ctx.Status?has_content> 
+            <Status>${ctx.Status}</Status>
+            </#if>
+            <#if ctx.ProcessMessage?has_content> 
+            <ProcessMessage>${ctx.ProcessMessage}</ProcessMessage>
+            </#if>
+         </Body>
+      </v1:ConsultarEstadoNotificacionSISEResp>
+   </soapenv:Body>
+</soapenv:Envelope>
+]]></format>
+                <args/>
+            </payloadFactory>
+            <property name="HTTP_SC" scope="axis2" type="STRING" value="200"/>
+        </case>
+        <case regex="noCanal">
+            <payloadFactory media-type="xml">
+                <format>
+                    <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                        <s:Body>
+                            <s:Fault>
+                                <faultcode xmlns="" xmlns:a="http://schemas.microsoft.com/net/2005/12/windowscommunicationfoundation/dispatcher">a:InternalServiceFault</faultcode>
+                                <faultstring xml:lang="es-CO" xmlns="">There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"El valor de 'canal' debe ser enviado en el header HTTP como un par clave-valor. List of possible elements expected: 'Canal'." .</faultstring>
+                                <detail xmlns="">
+                                    <ExceptionDetail xmlns="http://schemas.datacontract.org/2004/07/System.ServiceModel" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                                        <HelpLink i:nil="true"/>
+                                        <InnerException i:nil="true"/>
+                                        <Message>There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The element 'Header' has invalid child element 'IdCorrelacionConsumidor'. List of possible elements expected: 'Canal'." .</Message>
+                                        <StackTrace>at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkAsyncResult.End()
+   at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkServiceInstance.EndOperation(IAsyncResult result)
+   at AsyncInvokeEndEndTwoWayMethod(Object , Object[] , IAsyncResult )
+   at System.ServiceModel.Dispatcher.AsyncMethodInvoker.InvokeEnd(Object instance, Object[]&amp; outputs, IAsyncResult result)
+   at System.ServiceModel.Dispatcher.DispatchOperationRuntime.InvokeEnd(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.ImmutableDispatchRuntime.ProcessMessage7(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.MessageRpc.Process(Boolean isOperationContextSet)</StackTrace>
+                                        <Type>Microsoft.BizTalk.Message.Interop.BTSException</Type>
+                                    </ExceptionDetail>
+                                </detail>
+                            </s:Fault>
+                        </s:Body>
+                    </s:Envelope>
+                </format>
+                <args/>
+            </payloadFactory>
+            <property name="HTTP_SC" scope="axis2" type="STRING" value="500"/>
+        </case>
+        <case regex="noIdCorrelacionConsumidor">
+            <payloadFactory media-type="xml">
+                <format>
+                    <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                        <s:Body>
+                            <s:Fault>
+                                <faultcode xmlns="" xmlns:a="http://schemas.microsoft.com/net/2005/12/windowscommunicationfoundation/dispatcher">a:InternalServiceFault</faultcode>
+                                <faultstring xml:lang="es-CO" xmlns="">There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"El valor de 'IdCorrelacionConsumidor' debe ser enviado en el header HTTP como un par clave-valor. List of possible elements expected: 'IdCorrelacionConsumidor'." .</faultstring>
+                                <detail xmlns="">
+                                    <ExceptionDetail xmlns="http://schemas.datacontract.org/2004/07/System.ServiceModel" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                                        <HelpLink i:nil="true"/>
+                                        <InnerException i:nil="true"/>
+                                        <Message>There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The element 'Header' has invalid child element 'PeticionFecha'. List of possible elements expected: 'IdCorrelacionConsumidor'." .</Message>
+                                        <StackTrace>at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkAsyncResult.End()
+   at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkServiceInstance.EndOperation(IAsyncResult result)
+   at AsyncInvokeEndEndTwoWayMethod(Object , Object[] , IAsyncResult )
+   at System.ServiceModel.Dispatcher.AsyncMethodInvoker.InvokeEnd(Object instance, Object[]&amp; outputs, IAsyncResult result)
+   at System.ServiceModel.Dispatcher.DispatchOperationRuntime.InvokeEnd(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.ImmutableDispatchRuntime.ProcessMessage7(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.MessageRpc.Process(Boolean isOperationContextSet)</StackTrace>
+                                        <Type>Microsoft.BizTalk.Message.Interop.BTSException</Type>
+                                    </ExceptionDetail>
+                                </detail>
+                            </s:Fault>
+                        </s:Body>
+                    </s:Envelope>
+                </format>
+                <args/>
+            </payloadFactory>
+            <property name="HTTP_SC" scope="axis2" type="STRING" value="500"/>
+        </case>
+        <case regex="noPeticionFecha">
+            <payloadFactory media-type="xml">
+                <format>
+                    <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                        <s:Body>
+                            <s:Fault>
+                                <faultcode xmlns="" xmlns:a="http://schemas.microsoft.com/net/2005/12/windowscommunicationfoundation/dispatcher">a:InternalServiceFault</faultcode>
+                                <faultstring xml:lang="es-CO" xmlns="">There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"El valor de 'PeticionFecha' debe ser enviado en el header HTTP como un par clave-valor. List of possible elements expected: 'PeticionFecha'." .</faultstring>
+                                <detail xmlns="">
+                                    <ExceptionDetail xmlns="http://schemas.datacontract.org/2004/07/System.ServiceModel" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                                        <HelpLink i:nil="true"/>
+                                        <InnerException i:nil="true"/>
+                                        <Message>There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The element 'Header' has invalid child element 'Usuario'. List of possible elements expected: 'PeticionFecha'." .</Message>
+                                        <StackTrace>at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkAsyncResult.End()
+   at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkServiceInstance.EndOperation(IAsyncResult result)
+   at AsyncInvokeEndEndTwoWayMethod(Object , Object[] , IAsyncResult )
+   at System.ServiceModel.Dispatcher.AsyncMethodInvoker.InvokeEnd(Object instance, Object[]&amp; outputs, IAsyncResult result)
+   at System.ServiceModel.Dispatcher.DispatchOperationRuntime.InvokeEnd(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.ImmutableDispatchRuntime.ProcessMessage7(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.MessageRpc.Process(Boolean isOperationContextSet)</StackTrace>
+                                        <Type>Microsoft.BizTalk.Message.Interop.BTSException</Type>
+                                    </ExceptionDetail>
+                                </detail>
+                            </s:Fault>
+                        </s:Body>
+                    </s:Envelope>
+                </format>
+                <args/>
+            </payloadFactory>
+            <property name="HTTP_SC" scope="axis2" type="STRING" value="500"/>
+        </case>
+        <case regex="noFormatoPeticionFecha">
+            <payloadFactory media-type="xml">
+                <format>
+                    <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                        <s:Body>
+                            <s:Fault>
+                                <faultcode xmlns="" xmlns:a="http://schemas.microsoft.com/net/2005/12/windowscommunicationfoundation/dispatcher">a:InternalServiceFault</faultcode>
+                                <faultstring xml:lang="es-CO" xmlns="">There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"El valor de 'PeticionFecha' no cumple con el formato esperado. .</faultstring>
+                                <detail xmlns="">
+                                    <ExceptionDetail xmlns="http://schemas.datacontract.org/2004/07/System.ServiceModel" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                                        <HelpLink i:nil="true"/>
+                                        <InnerException i:nil="true"/>
+                                        <Message>There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The 'PeticionFecha' element has an invalid value according to its data type." .</Message>
+                                        <StackTrace>at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkAsyncResult.End()
+   at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkServiceInstance.EndOperation(IAsyncResult result)
+   at AsyncInvokeEndEndTwoWayMethod(Object , Object[] , IAsyncResult )
+   at System.ServiceModel.Dispatcher.AsyncMethodInvoker.InvokeEnd(Object instance, Object[]&amp; outputs, IAsyncResult result)
+   at System.ServiceModel.Dispatcher.DispatchOperationRuntime.InvokeEnd(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.ImmutableDispatchRuntime.ProcessMessage7(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.MessageRpc.Process(Boolean isOperationContextSet)</StackTrace>
+                                        <Type>Microsoft.BizTalk.Message.Interop.BTSException</Type>
+                                    </ExceptionDetail>
+                                </detail>
+                            </s:Fault>
+                        </s:Body>
+                    </s:Envelope>
+                </format>
+                <args/>
+            </payloadFactory>
+            <property name="HTTP_SC" scope="axis2" type="STRING" value="500"/>
+        </case>
+        <case regex="noIdProcess">
+            <payloadFactory media-type="xml">
+                <format>
+                    <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                        <s:Body>
+                            <s:Fault>
+                                <faultcode xmlns="" xmlns:a="http://schemas.microsoft.com/net/2005/12/windowscommunicationfoundation/dispatcher">a:InternalServiceFault</faultcode>
+                                <faultstring xml:lang="es-CO" xmlns="">There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The element 'Body' has invalid child element 'AccountName'. List of possible elements expected: 'IdProcess'." .</faultstring>
+                                <detail xmlns="">
+                                    <ExceptionDetail xmlns="http://schemas.datacontract.org/2004/07/System.ServiceModel" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                                        <HelpLink i:nil="true"/>
+                                        <InnerException i:nil="true"/>
+                                        <Message>There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The element 'Body' has invalid child element 'AccountName'. List of possible elements expected: 'IdProcess'." .</Message>
+                                        <StackTrace>at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkAsyncResult.End()
+   at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkServiceInstance.EndOperation(IAsyncResult result)
+   at AsyncInvokeEndEndTwoWayMethod(Object , Object[] , IAsyncResult )
+   at System.ServiceModel.Dispatcher.AsyncMethodInvoker.InvokeEnd(Object instance, Object[]&amp; outputs, IAsyncResult result)
+   at System.ServiceModel.Dispatcher.DispatchOperationRuntime.InvokeEnd(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.ImmutableDispatchRuntime.ProcessMessage7(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.MessageRpc.Process(Boolean isOperationContextSet)</StackTrace>
+                                        <Type>Microsoft.BizTalk.Message.Interop.BTSException</Type>
+                                    </ExceptionDetail>
+                                </detail>
+                            </s:Fault>
+                        </s:Body>
+                    </s:Envelope>
+                </format>
+                <args/>
+            </payloadFactory>
+            <property name="HTTP_SC" scope="axis2" type="STRING" value="500"/>
+        </case>
+        <default>
+            <payloadFactory media-type="xml">
+                <format>
+                    <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                        <s:Body>
+                            <s:Fault>
+                                <faultcode xmlns="" xmlns:a="http://schemas.microsoft.com/net/2005/12/windowscommunicationfoundation/dispatcher">a:InternalServiceFault</faultcode>
+                                <faultstring xml:lang="es-CO" xmlns="">There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The element 'Body' has invalid child element 'AccountName'. List of possible elements expected: 'IdProcess'." .</faultstring>
+                                <detail xmlns="">
+                                    <ExceptionDetail xmlns="http://schemas.datacontract.org/2004/07/System.ServiceModel" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                                        <HelpLink i:nil="true"/>
+                                        <InnerException i:nil="true"/>
+                                        <Message>There was a failure executing the receive pipeline: "Microsoft.Practices.ESB.Itinerary.Pipelines.ItinerarySelectReceiveXml, Microsoft.Practices.ESB.Itinerary.Pipelines, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Source: "ESB Dispatcher" Receive Port: "RP.AXAColpatria.GestionPolizasSOAT" URI: "/AXAColpatria/Tarea/GestionPolizas/SOAT/ConsultasSOAT_V2/ConsultasSOAT.svc" Reason: The document failed to validate because of the following error:"The element 'Body' has invalid child element 'AccountName'. List of possible elements expected: 'IdProcess'." .</Message>
+                                        <StackTrace>at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkAsyncResult.End()
+   at Microsoft.BizTalk.Adapter.Wcf.Runtime.BizTalkServiceInstance.EndOperation(IAsyncResult result)
+   at AsyncInvokeEndEndTwoWayMethod(Object , Object[] , IAsyncResult )
+   at System.ServiceModel.Dispatcher.AsyncMethodInvoker.InvokeEnd(Object instance, Object[]&amp; outputs, IAsyncResult result)
+   at System.ServiceModel.Dispatcher.DispatchOperationRuntime.InvokeEnd(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.ImmutableDispatchRuntime.ProcessMessage7(MessageRpc&amp; rpc)
+   at System.ServiceModel.Dispatcher.MessageRpc.Process(Boolean isOperationContextSet)</StackTrace>
+                                        <Type>Microsoft.BizTalk.Message.Interop.BTSException</Type>
+                                    </ExceptionDetail>
+                                </detail>
+                            </s:Fault>
+                        </s:Body>
+                    </s:Envelope>
+                </format>
+                <args/>
+            </payloadFactory>
+            <property name="error" scope="default" type="STRING" value="true"/>
+        </default>
+    </switch>
+    <propertyGroup>
+        <property name="messageType" scope="axis2" type="STRING" value="application/xml"/>
+    </propertyGroup>
+    <respond/>
+</sequence>

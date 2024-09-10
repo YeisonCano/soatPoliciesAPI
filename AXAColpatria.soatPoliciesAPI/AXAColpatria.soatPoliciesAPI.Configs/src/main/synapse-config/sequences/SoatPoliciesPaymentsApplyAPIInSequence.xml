@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="SoatPoliciesPaymentsApplyAPIInSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log category="DEBUG" level="full"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://AXAColpatria.GestionPolizasSOAT.Tarea.Pagos_V2.Esquemas/AplicarPagoReq/V1.0">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <v1:AplicarPagoReq>
+                        <Header>
+                            <Canal>Online</Canal>
+                            <IdCorrelacionConsumidor>45ca687c-d3de-46fc-9381-66289e46d12a</IdCorrelacionConsumidor>
+                            <IdTransaccion>a425ff38-580d-42f7-ba22-43db07026f44</IdTransaccion>
+                            <PeticionFecha>2024-05-23T11:42:13.270933-05:00</PeticionFecha>
+                            <Usuario>Recaudo</Usuario>
+                        </Header>
+                        <Body>
+                            <PagosAsociados>
+                                <PagoAsociado>
+                                    <IdCuenta>$1</IdCuenta>
+                                    <Banco>$2</Banco>
+                                    <NumeroTarjeta>$3</NumeroTarjeta>
+                                    <Franquicias>
+                                        <Franquicia>
+                                            <IdFranquicia>$4</IdFranquicia>
+                                        </Franquicia>
+                                    </Franquicias>
+                                    <Autorizacion>$5</Autorizacion>
+                                    <DireccionIP>$6</DireccionIP>
+                                    <GUID>$7</GUID>
+                                    <NITEntidadFinanciera>$8</NITEntidadFinanciera>
+                                    <NumeroBoleta>$9</NumeroBoleta>
+                                    <TipoProducto>$10</TipoProducto>
+                                    <XMLPagoInternet>$11</XMLPagoInternet>
+                                    <FechaPago>$12</FechaPago>
+                                    <TipoPago>$13</TipoPago>
+                                    <ValorPagado>
+                                        <Monto>$14</Monto>
+                                    </ValorPagado>
+                                    <ReferenciaPago>$15</ReferenciaPago>
+                                </PagoAsociado>
+                            </PagosAsociados>
+                        </Body>
+                    </v1:AplicarPagoReq>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.IdCuenta"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.Banco"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.NumeroTarjeta"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.Franquicias.Franquicia.IdFranquicia"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.Autorizacion"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.DireccionIP"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.GUID"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.NITEntidadFinanciera"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.NumeroBoleta"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.TipoProducto"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.XMLPagoInternet"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.FechaPago"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.TipoPago"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.ValorPagado.Monto"/>
+            <arg evaluator="json" expression="$.PagosAsociados.PagoAsociado.ReferenciaPago"/>
+        </args>
+    </payloadFactory>
+    <log category="DEBUG" level="full"/>
+    <header description="Set SOAPAction header" name="Action" scope="default" value="AplicarPago"/>
+    <call>
+        <endpoint key="SoatPoliciesPaymentsApplyAPIEndPoint"/>
+    </call>
+    <property description="Set message type" name="messageType" scope="axis2" type="STRING" value="application/json"/>
+    <filter regex="false" source="//*[local-name()='FlagException']/text()">
+        <then>
+            <log category="DEBUG" level="full"/>
+            <payloadFactory media-type="json">
+                <format>
+                	{
+					  "MsgRsHdr": {
+					    "error": null
+					  },
+					  "body": {
+					    "Message": "$1"
+					  }
+					}
+				</format>
+                <args>
+                    <arg evaluator="xml" expression="//*[local-name()='RtaDescCanal']/text()"/>
+                </args>
+            </payloadFactory>
+        </then>
+        <else>
+            <log category="DEBUG" level="full"/>
+            <payloadFactory media-type="json">
+                <format>
+                	{
+					  "MsgRsHdr": {
+					    "error": {
+					      "Status": {
+					        "StatusCode": 200,
+					        "Severity": null,
+					        "StatusDesc": "La consulta no está disponible por el momento, por favor intente más tarde",
+					        "AdditionalStatus": {
+					          "ServerStatusCode": "2",
+					          "Category": "Error Negocio",
+					          "StatusDesc": "$1"
+					        }
+					      }
+					    }
+					  },
+					  "body": null
+					}
+                </format>
+                <args>
+                    <arg evaluator="xml" expression="//*[local-name()='RtaDescCanal']/text()"/>
+                </args>
+            </payloadFactory>
+        </else>
+    </filter>
+    <respond/>
+</sequence>

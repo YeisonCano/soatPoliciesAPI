@@ -1,0 +1,11 @@
+---
+key: "soatPoliciesAPI-1.0.0"
+name : "soatPoliciesAPI"
+displayName : "soatPoliciesAPI"
+description: "Sample API"
+version: "1.0.0"
+serviceUrl: "@MIMetadata/policyManagement/soatPoliciesAPI/v2"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false
+apiId : "null"

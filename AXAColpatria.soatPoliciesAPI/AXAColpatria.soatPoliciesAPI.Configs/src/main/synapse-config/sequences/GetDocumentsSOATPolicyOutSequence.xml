@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetDocumentsSOATPolicyOutSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log>
+        <property name="SeqName" value="GetDocumentsSOATPolicyOutSequence"/>
+        <property expression="string($body//ns:Header/ns:FlagException)" name="FlagException" xmlns:ns="http://AXA.SOAT.Tarea.DescargaPolizaSOAT.Schemas/DescargaPolizaSOAT/V1.0"/>
+    </log>
+    <filter regex="200" source="$axis2:HTTP_SC">
+        <then>
+            <log>
+                <property expression="$body" name="PayloadResp"/>
+            </log>
+        </then>
+        <else>
+            <sequence key="GetDocumentsSOATPolicyFaultSequence"/>
+        </else>
+    </filter>
+    <filter regex="true" source="string($body//ns:Header/ns:FlagException)" xmlns:ns="http://AXA.SOAT.Tarea.DescargaPolizaSOAT.Schemas/DescargaPolizaSOAT/V1.0">
+        <then>
+            <propertyGroup>
+                <property expression="$body//ns:Header/ns:RtaCodHost" name="ERROR_CODE" scope="default" type="STRING"/>
+                <property expression="$body//ns:Header/ns:RtaDescHost" name="ERROR_MESSAGE" scope="default" type="STRING"/>
+                <property expression="$body//ns:Header/ns:Categoria" name="categoria" scope="default" type="STRING"/>
+                <property expression="$body//ns:Header/ns:RtaDescCanal" name="ERROR_DETAIL" scope="default" type="STRING"/>
+            </propertyGroup>
+            <sequence key="GetDocumentsSOATPolicyFaultSequence"/>
+        </then>
+        <else/>
+    </filter>
+    <payloadFactory media-type="json" template-type="freemarker">
+        <format><![CDATA[{
+  "MsgRsHdr": {
+  "error": null
+  },
+"body":{
+  "results": [
+  <#assign x = 1> 
+  <#list payload["//*[local-name()='Body']/*[local-name()='Poliza']"] as node>
+  <#if x gt 1>,</#if>
+    {
+      "tareCode": "${node["*[local-name()='CodigoTarifa']"]}",
+      "document": {
+		<#if node["*[local-name()='Url']"]?has_content>
+		"url": "${node["*[local-name()='Url']"]}"
+		<#else>
+		"url": ""
+		</#if>		
+      },
+      "idAgreement": "${node["*[local-name()='NoFormulario']"]}",
+      "downloadType": "${node["*[local-name()='MedioDescarga']"]}",
+      "owner": {
+        "name": "${node["*[local-name()='NombrePropietario']"]}",
+        "idNumber": "${node["*[local-name()='DocumentoPropietario']"]}"
+      },
+      "holder": {
+        "name": "${node["*[local-name()='NombreTomador']"]}",
+        "idNumber": "${node["*[local-name()='DocumentoTomador']"]}"
+      },
+      "toltalValue": "${node["*[local-name()='ValorTotalPoliza']"]}",
+      "vehicle": {
+        "plate": "${node["*[local-name()='NoPlaca']"]}"
+      },
+      "validity": {
+        "startDate": "${node["*[local-name()='FechaInicioVigencia']"]}",
+        "endDate": "${node["*[local-name()='FechaFinVigencia']"]}",
+        "createDate": "${node["*[local-name()='FechaExpedicion']"]}"
+      }     
+    }
+	<#assign x++>
+	</#list>
+  ]
+}
+}]]></format>
+        <args/>
+    </payloadFactory>
+    <respond/>
+</sequence>

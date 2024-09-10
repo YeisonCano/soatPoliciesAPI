@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="soapCallTemplate" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter defaultValue="" isMandatory="false" name="soapAction"/>
+    <parameter defaultValue="" isMandatory="false" name="urlResource"/>
+    <parameter defaultValue="" isMandatory="false" name="enableSec"/>
+    <parameter defaultValue="" isMandatory="false" name="blocking"/>
+    <parameter defaultValue="" isMandatory="false" name="removeUrlPostFix"/>
+    <parameter defaultValue="" isMandatory="false" name="removeTransportHeader"/>
+    <parameter defaultValue="" isMandatory="false" name="username"/>
+    <parameter defaultValue="" isMandatory="false" name="password"/>
+    <sequence>
+        <filter xpath="boolean($func:removeTransportHeader) and string($func:removeTransportHeader) = 'true'">
+            <then>
+                <property action="remove" name="TRANSPORT_HEADERS" scope="axis2"/>
+                <property action="remove" name="EXCESS_TRANSPORT_HEADERS" scope="axis2"/>
+            </then>
+            <else/>
+        </filter>
+        <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+        <property expression="$func:urlResource" name="soapCallTemplate_URL" scope="default" type="STRING"/>
+        <header expression="$ctx:soapCallTemplate_URL" name="To" scope="default"/>
+        <property name="messageType" scope="axis2" type="STRING" value="text/xml;charset=UTF-8"/>
+        <header expression="$func:soapAction" name="soapAction" scope="transport"/>
+        <header description="Action" expression="$func:soapAction" name="Action" scope="default"/>
+        <filter xpath="boolean($func:removeUrlPostFix) and string($func:removeUrlPostFix) = 'true'">
+            <then>
+                <property action="remove" description="Remove REST URL POSTFIX" name="REST_URL_POSTFIX" scope="axis2"/>
+            </then>
+            <else/>
+        </filter>
+        <filter xpath="boolean($func:blocking) and string($func:blocking) = 'true'">
+            <then>
+                <call blocking="true">
+                    <endpoint key="gov:custom/SOAP11EP.xml"/>
+                </call>
+            </then>
+            <else>
+                <call>
+                    <endpoint key="gov:custom/SOAP11EP.xml"/>
+                </call>
+            </else>
+        </filter>
+    </sequence>
+</template>

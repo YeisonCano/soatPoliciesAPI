@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="soatPoliciesAPIv2ConsultarImpuestosGPSOATOutSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <payloadFactory media-type="json">
+        <format>$1</format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:responsePayload"/>
+        </args>
+    </payloadFactory>
+    <switch source="$axis2:HTTP_SC">
+        <case regex="^[2][0-9][0-9]">
+            <payloadFactory media-type="json" template-type="freemarker">
+                <format><![CDATA[<#if payload.vrpaa114Response.return.PPIEWS.CODRESPUESTA?c == "0">
+		{
+    "MsgRsHdr": {
+        "error": "string"
+    },
+    "body": {
+        "results": {
+            "payment": {
+                "cores": ${payload.vrpaa114Response.return.PPRMSALWS.CORES},
+                "tax": {
+                    "rate": {
+                        "deductibleVAT": ${payload.vrpaa114Response.return.PPRMSALWS.IVADES?string("0.000000")},
+                        "VATExpense": ${payload.vrpaa114Response.return.PPRMSALWS.IVAGAS?string("0.000000")},
+                        "VATRetention": ${payload.vrpaa114Response.return.PPRMSALWS.RETIVA?string("0.000000")},
+                        "withholdingTax": ${payload.vrpaa114Response.return.PPRMSALWS.RETFTE?string("0.000000")},
+                        "firefightersSurcharge ": ${payload.vrpaa114Response.return.PPRMSALWS.SOBBOM?string("0.000000")},
+                        "ICARetention": ${payload.vrpaa114Response.return.PPRMSALWS.RETICA?string("0.000000")}
+                    }
+                },
+                "IPAddress": "${payload.vrpaa114Response.return.PPRMSALWS.DIREIP}",
+                "creationDate": "${payload.vrpaa114Response.return.PPRMSALWS.FECRES}"
+            },
+            "response": {
+                "message": "${payload.vrpaa114Response.return.PPIEWS.MSGLARGO}",
+                "consultationDate": "${payload.vrpaa114Response.return.PPIEWS.FECHACONSULTA}"
+            }
+        }
+    }
+}
+	<#else>
+	{
+    "MsgRsHdr": {
+        "error": {
+            "Status": {
+				"StatusCode": ${payload.vrpaa114Response.return.PPIEWS.CODRESPUESTA?c},
+                "Severity": "error",
+                "StatusDesc": "${payload.vrpaa114Response.return.PPIEWS.MSGLARGO}",
+                "AdditionalStatus": {
+		    "ServerStatusCode": ${payload.vrpaa114Response.return.PPIEWS.CODRESPUESTA?c},
+                    "Category": "error",
+                    "StatusDesc": "${payload.vrpaa114Response.return.PPIEWS.MSGLARGO}"
+                }
+            }
+        }
+    },
+"body":null
+}
+	</#if>]]></format>
+                <args/>
+            </payloadFactory>
+        </case>
+        <default>
+            <payloadFactory media-type="xml" template-type="freemarker">
+                <format><![CDATA[
+                {
+    "MsgRsHdr": {
+        "error": {
+            "Status": {
+                "StatusCode": 200,
+                "Severity": "error",
+                "StatusDesc": "La consulta no esta disponible por el momento, por favor intente más tarde",
+                "AdditionalStatus": {
+                    "ServerStatusCode": 200,
+                    "Category": "Error Técnico",
+                    "StatusDesc": "La consulta no esta disponible por el momento, por favor intente más tarde"
+                }
+            }
+        }
+    },
+    "body": null
+}]]></format>
+                <args/>
+            </payloadFactory>
+        </default>
+    </switch>
+    <respond/>
+</sequence>

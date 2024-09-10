@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ConsultarPolizaSOATporNumeroPolizaInSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log>
+        <property name="SeqName" value="ConsultarPolizaSOATporNumeroPolizaInSequence"/>
+    </log>
+    <propertyGroup>
+        <property expression="get-property('file', 'wso2MIBaseUrl')" name="uri.var.wso2MIBaseUrl" scope="default" type="STRING"/>
+        <property expression="string($body//v1:ConsultarPolizaSOATPorNumerodePolizaReq/Header/IdCorrelacionConsumidor)" name="idCorrelacionConsumidor" scope="default" type="STRING" xmlns:v1="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaReq/V1.0"/>
+        <property expression="string($body//v1:ConsultarPolizaSOATPorNumerodePolizaReq/Header/IdTransaccion)" name="idTransaccion" scope="default" type="STRING" xmlns:v1="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaReq/V1.0"/>
+        <property expression="string($body//v1:ConsultarPolizaSOATPorNumerodePolizaReq/Body/SOAT/DatosSoat/NumeroPoliza)" name="uri.var.policyNumber" scope="default" type="STRING" xmlns:v1="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaReq/V1.0"/>
+        <property expression="string($body//v1:ConsultarPolizaSOATPorNumerodePolizaReq/Body/SOAT/DatosSoat/ClaveConvenio)" name="uri.var.agreementKey" scope="default" type="STRING" xmlns:v1="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaReq/V1.0"/>
+    </propertyGroup>
+    <log>
+        <property expression="get-property('uri.var.agreementKey')" name="claveConvenio"/>
+        <property expression="get-property('uri.var.policyNumber')" name="numeroPoliza"/>
+        <property expression="get-property('idTransaccion')" name="idTransaccion"/>
+        <property expression="fn:string-length(get-property('idTransaccion'))" name="idTransaccionLength"/>
+    </log>
+    <filter regex="^0\.0" source="fn:string-length(get-property('idTransaccion'))">
+        <then>
+            <property expression="fn:substring-after(get-property('MessageID'),':uuid:')" name="idTransaccion" scope="default" type="STRING"/>
+        </then>
+        <else/>
+    </filter>
+    <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+    <property name="contentType" scope="axis2" type="STRING" value="application/json"/>
+    <property name="DISABLE_CHUNKING" scope="axis2" type="STRING" value="true"/>
+    <property name="NO_ENTITY_BODY" scope="axis2" type="BOOLEAN" value="true"/>
+    <call>
+        <endpoint key="SoatPoliciesAPIEndPoint"/>
+    </call>
+    <log>
+        <property name="SeqName" value="ConsultarPolizaSOATporNumeroPolizaInSequence"/>
+        <property expression="json-eval($)" name="responsePayload"/>
+    </log>
+    <sequence key="ConsultarPolizaSOATporNumeroPolizaOutSequence"/>
+</sequence>

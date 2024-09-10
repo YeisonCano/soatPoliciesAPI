@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="soatPoliciesAPIv2ConsultarImpuestosGPSOATInSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property expression="$url:idNumber" name="NumeroIdentificacion" scope="default" type="STRING"/>
+        <property expression="$url:idType" name="TipoIdentificacion" scope="default" type="STRING"/>
+        <property expression="$url:agreementCode" name="ClaveConvenio" scope="default" type="STRING"/>
+        <property expression="$url:serviceId" name="IdServicio" scope="default" type="STRING"/>
+        <property expression="get-property('transport', 'user')" name="Usuario" scope="default" type="STRING"/>
+        <property name="categoria" scope="default" type="STRING" value="Error Técnico"/>
+    </propertyGroup>
+    <log>
+        <property name="SeqName" value="soatPoliciesAPIv2ConsultarImpuestosGPSOATInSequence"/>
+        <property expression="get-property('NumeroIdentificacion')" name="NumeroIdentificacion"/>
+        <property expression="get-property('TipoIdentificacion')" name="TipoIdentificacion"/>
+        <property expression="get-property('ClaveConvenio')" name="ClaveConvenio"/>
+        <property expression="get-property('IdServicio')" name="IdServicio"/>
+        <property expression="get-property('Usuario')" name="Usuario"/>
+    </log>
+    <payloadFactory media-type="xml" template-type="freemarker">
+        <format><![CDATA[<#function homologarTipoDoc str=''>
+	<#if str='CC'>
+		<#return 'C'>
+	</#if>
+	<#if str='CE'>
+		<#return 'E'>
+	</#if>
+	<#if str='NIT'>
+		<#return 'N'>
+	</#if>
+	<#if str='PA'>
+		<#return 'P'>
+	</#if>	
+</#function>
+<ns0:vrpaa114 xmlns:ns0="http://serviciosoat.wsbeans.iseries/">
+	<arg0>
+		<PCABECERAWS>
+			<IDSERVICIO>${ctx.IdServicio}</IDSERVICIO>
+			<USREJECUTA>${ctx.Usuario}</USREJECUTA>
+		</PCABECERAWS>
+		<PPRMENTWS>
+			<ICLAVE>${ctx.ClaveConvenio}</ICLAVE>
+			<INUMDO>${ctx.NumeroIdentificacion}</INUMDO>
+			<ITIPDOC>${homologarTipoDoc(ctx.TipoIdentificacion)}</ITIPDOC>
+		</PPRMENTWS>
+	</arg0>
+</ns0:vrpaa114>]]></format>
+        <args/>
+    </payloadFactory>
+    <log>
+        <property expression="json-eval($)" name="JsonReqPayload"/>
+    </log>
+    <property expression="hashicorp:vault-lookup('secret//policyManagement/soatPoliciesAPI/v2/taxes/GET', 'ServicioSoatGPEndPointAddressUrl')" name="ServicioSoatGPEndPointAddressUrl" scope="default" type="STRING"/>
+    <log>
+        <property expression="get-property('ServicioSoatGPEndPointAddressUrl')" name="ServicioSoatGPEndPointAddressUrl"/>
+    </log>
+    <call-template target="gov:custom/soapCallTemplate.xml">
+        <with-param name="soapAction" value="http://serviciosoat.wsbeans.iseries/ServicioSoatServices/vrpaa114Request"/>
+        <with-param name="urlResource" value="{get-property('ServicioSoatGPEndPointAddressUrl')}"/>
+        <with-param name="urlBackendName" value="mms_person_url"/>
+        <with-param name="removeTransportHeader" value="false"/>
+        <with-param name="removeUrlPostFix" value="true"/>
+    </call-template>
+    <property expression="json-eval($)" name="responsePayload" scope="default" type="STRING"/>
+    <log>
+        <property expression="json-eval($)" name="JsonRespPayload"/>
+    </log>
+    <loopback/>
+</sequence>

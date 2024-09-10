@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ConsultarEstadoNotificacionSOATOutSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <switch source="$ctx:Status">
+        <case regex="true">
+            <log>
+                <property name="Status" value="true-switch"/>
+            </log>
+            <payloadFactory media-type="xml" template-type="freemarker">
+                <format><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://AXAColpatria.Tarea.GestionPolizasSOAT.Notificacion_V2.Esquemas/ConsultarEstadoNotificacionSISEResp/V1.0">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <v1:ConsultarEstadoNotificacionSISEResp>
+         <Header>
+            <Criticidad>Información</Criticidad>
+            <IdCorrelacionConsumidor/>
+            <IdTransaccion>${ctx.MessageID2}</IdTransaccion>
+            <RtaCodCanal>0</RtaCodCanal>
+            <RtaCodHost>0</RtaCodHost>
+            <RtaDescCanal>${ctx.ProcessMessage}</RtaDescCanal>
+            <RtaDescHost>${ctx.ProcessMessage}</RtaDescHost>
+            <Metodo>ProcessResponseSoat</Metodo>
+            <Proceso>ProcessResponseSoat</Proceso>
+            <Categoria>Información</Categoria>
+            <FlagException>false</FlagException>
+         </Header>
+         <Body>
+            <#if ctx.IdProcess?has_content> 
+            <IdProcess>${ctx.IdProcess}</IdProcess>
+            </#if>
+            <#if ctx.Process?has_content> 
+            <Process>${ctx.Process}</Process>
+            </#if>
+            <#if ctx.DateProcess?has_content> 
+            <DateProcess>${ctx.DateProcess}</DateProcess>
+            </#if>
+            <#if ctx.Status?has_content> 
+            <Status>${ctx.Status}</Status>
+            </#if>
+            <#if ctx.ProcessMessage?has_content> 
+            <ProcessMessage>${ctx.ProcessMessage}</ProcessMessage>
+            </#if>
+         </Body>
+      </v1:ConsultarEstadoNotificacionSISEResp>
+   </soapenv:Body>
+</soapenv:Envelope>]]></format>
+                <args/>
+            </payloadFactory>
+            <log level="full">
+                <property expression="$body" name="MI"/>
+            </log>
+            <respond/>
+        </case>
+        <default>
+            <sequence key="ConsultarEstadoNotificacionSOATFaultSequence"/>
+        </default>
+    </switch>
+</sequence>

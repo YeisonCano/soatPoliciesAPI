@@ -1,0 +1,133 @@
+openapi: 3.0.1
+info:
+  title: soatPoliciesAPI
+  description: API Definition of soatPoliciesAPI
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/policyManagement/soatPoliciesAPI/v2
+paths:
+  /policies/issuingState:
+    get:
+      responses:
+        default:
+          description: Default response
+  /payments/apply:
+    post:
+      requestBody:
+        description: Sample Payload
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+        required: false
+      responses:
+        default:
+          description: Default response
+  /renewal/{Referencia}/voucher:
+    get:
+      parameters:
+      - name: Referencia
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: NoFormulario
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response
+  /policies/documents/{plate}/{idnumber}:
+    get:
+      parameters:
+      - name: plate
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: idnumber
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response
+  /policies/{plate}:
+    get:
+      parameters:
+      - name: plate
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response
+  /policies/{policyNumber}/{agreementKey}:
+    get:
+      parameters:
+      - name: policyNumber
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: agreementKey
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response
+  /taxes:
+    get:
+      responses:
+        default:
+          description: Default response
+  /policies/validity/{plate}/{engineId}/{vinId}/vehicle:
+    get:
+      parameters:
+      - name: plate
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: engineId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: vinId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response

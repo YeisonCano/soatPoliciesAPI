@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="ConsultarPolizaSOATporNumeroPolizaOutSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log>
+        <property name="SeqName" value="ConsultarPolizaSOATporNumeroPolizaOutSequence"/>
+    </log>
+    <switch source="$axis2:HTTP_SC">
+        <case regex="^[2][0-9][0-9]">
+            <payloadFactory media-type="xml" template-type="freemarker">
+                <format><![CDATA[<#if (payload.body)??>
+<v1:ConsultarPolizaSOATPorNumerodePolizaResp xmlns:v1="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaResp/V1.0">
+	<Header>
+		<Criticidad>Información</Criticidad>
+		<IdCorrelacionConsumidor>${ctx.idCorrelacionConsumidor}</IdCorrelacionConsumidor>
+		<IdTransaccion>${ctx.idTransaccion}</IdTransaccion>
+		<RtaCodCanal>0</RtaCodCanal>
+		<RtaCodHost>0</RtaCodHost>
+		<RtaDescCanal>Operación ejecutada exitosamente.</RtaDescCanal>
+		<RtaDescHost>Operación ejecutada exitosamente.</RtaDescHost>
+		<Metodo>ConsultarPolizaSOATPorNumeroPoliza</Metodo>
+		<Proceso>SOAT</Proceso>
+		<Categoria>Información</Categoria>
+		<FlagException>false</FlagException>
+	</Header>
+	<Body>
+		<SOAT>
+			<PolizaSOAT>
+				<Id>${payload.body.results.SOATPolicy.id?c}</Id>
+				<IdTarifa>${payload.body.results.SOATPolicy.tareId?c}</IdTarifa>
+				<ImpPrima>${payload.body.results.SOATPolicy.taxPrime?string("0.00")}</ImpPrima>
+				<ValorComisionAgentePV>${payload.body.results.SOATPolicy.agentCommissionSalePoint?string("0.00")}</ValorComisionAgentePV>
+				<ValorReteIcaPV>${payload.body.results.SOATPolicy.retentionICASalePoint?string("0.00")}</ValorReteIcaPV>
+				<ValorReteFuentePV>${payload.body.results.SOATPolicy.withholdingRetentionSalePoint?string("0.00")}</ValorReteFuentePV>
+				<PorcentajeComision>${payload.body.results.SOATPolicy.commissionPercentage?string("0.00")}</PorcentajeComision>
+				<ValorReteIcaAsesor>${payload.body.results.SOATPolicy.adviserICARetention?string("0.00")}</ValorReteIcaAsesor>
+				<ValorReteFuenteAsesor>${payload.body.results.SOATPolicy.adviserwithholdingRetention?string("0.00")}</ValorReteFuenteAsesor>
+				<ValorTotalPoliza>${payload.body.results.SOATPolicy.totalPrime?string("0.00")}</ValorTotalPoliza>
+				<GastoEnvio>${payload.body.results.SOATPolicy.shippingCosts?string("0.00")}</GastoEnvio>
+				<IdPuntoVenta>${payload.body.results.SOATPolicy.salePointId}</IdPuntoVenta>
+				<TransferenciaFPV>${payload.body.results.SOATPolicy.transferFPV?string("0.00")}</TransferenciaFPV>
+				<CodigoAseguradora>${payload.body.results.SOATPolicy.insuranceCode}</CodigoAseguradora>
+				<CodigoSucursal>${payload.body.results.SOATPolicy.subsidiaryCode}</CodigoSucursal>
+				<ClaveProductor>${payload.body.results.SOATPolicy.productorKey}</ClaveProductor>
+				<NumeroFormulario>${payload.body.results.SOATPolicy.formNumber?c}</NumeroFormulario>
+				<CiudadExpedicion>${payload.body.results.SOATPolicy.expeditionCity}</CiudadExpedicion>
+				<#if (payload.body.results.SOATPolicy.note)??>
+				<Observacion>${payload.body.results.SOATPolicy.note}</Observacion>
+				</#if>
+				<IdEstadoEmision>${payload.body.results.SOATPolicy.issuingStateId}</IdEstadoEmision>
+				<Estado>${payload.body.results.SOATPolicy.state}</Estado>
+				<PermiteAnularRenovar>${payload.body.results.SOATPolicy.isAllowAnullmentRenewal}</PermiteAnularRenovar>
+			</PolizaSOAT>
+			<ContribucionesTransferencias>
+				<ValorContribucionFOSYGA>${payload.body.results.transfersContributions.FOSYGAContribution?string("0.00")}</ValorContribucionFOSYGA>
+				<ValorTransferenciaFONSAT>${payload.body.results.transfersContributions.FONSATTransfer?string("0.00")}</ValorTransferenciaFONSAT>
+			</ContribucionesTransferencias>
+			<DatosSoat>
+				<Propietario>
+					<ContactoPrincipal>
+						<#if (payload.body.results.policyData.ownner.email)??>
+						<Email>${payload.body.results.policyData.ownner.email}</Email>
+						<#else>
+						<Email/>
+						</#if>
+						<TelefonoLaboral>
+							<#if (payload.body.results.policyData.ownner.telephone)??>
+							<Numero>${payload.body.results.policyData.ownner.telephone}</Numero>
+							<#else>
+							<Numero/>
+							</#if>
+						</TelefonoLaboral>
+					</ContactoPrincipal>
+					<DireccionPrincipal>
+						<#if (payload.body.results.policyData.ownner.mainAddress)??>
+						<LineaDireccion1>${payload.body.results.policyData.ownner.mainAddress}</LineaDireccion1>
+						<#else>
+						<LineaDireccion1/>
+						</#if>
+						<Ciudad>
+							<Nombre/>
+						</Ciudad>
+					</DireccionPrincipal>
+					<Personas>
+						<Persona>
+							<Id>${payload.body.results.policyData.ownner.person.id}</Id>
+							<IdTipoDocumento>${payload.body.results.policyData.ownner.person.idTypeId}</IdTipoDocumento>
+							<tipoIdentificacion>${payload.body.results.policyData.ownner.person.idType}</tipoIdentificacion>
+							<PrimerNombre>${payload.body.results.policyData.ownner.person.firstName}</PrimerNombre>
+							<SegundoNombre>${payload.body.results.policyData.ownner.person.middleName}</SegundoNombre>
+							<#if (payload.body.results.policyData.ownner.person.lastName)??>
+							<PrimerApellido>${payload.body.results.policyData.ownner.person.lastName}</PrimerApellido>
+							<#else>
+							<PrimerApellido/>
+							</#if>
+							<#if (payload.body.results.policyData.ownner.person.familyName)??>
+							<SegundoApellido>${payload.body.results.policyData.ownner.person.familyName}</SegundoApellido>							
+							</#if>
+							<Identificacion>${payload.body.results.policyData.ownner.person.idNumber}</Identificacion>
+							<NombreCompleto>${payload.body.results.policyData.ownner.person.name}</NombreCompleto>
+							<#if (payload.body.results.policyData.ownner.person.gender)??>
+							<Genero>${payload.body.results.policyData.ownner.person.gender}</Genero>
+							<#else>
+							<Genero/>
+							</#if>
+							<PersonaId>${payload.body.results.policyData.ownner.person.personId}</PersonaId>
+						</Persona>
+					</Personas>
+					<InformacionFinanciera>
+						<ActividadEconomica>
+							<#if (payload.body.results.policyData.ownner.financialData.economicActivity)??>
+							<Codigo>${payload.body.results.policyData.ownner.financialData.economicActivity}</Codigo>
+							<#else>
+							<Codigo/>
+							</#if>							
+						</ActividadEconomica>
+					</InformacionFinanciera>
+				</Propietario>
+				<Tomador>
+					<ContactoPrincipal>
+						<#if (payload.body.results.policyData.holder.email)??>
+						<Email>${payload.body.results.policyData.holder.email}</Email>
+						<#else>
+						<Email/>
+						</#if>
+						<TelefonoLaboral>
+							<#if (payload.body.results.policyData.holder.telephone)??>
+							<Numero>${payload.body.results.policyData.holder.telephone}</Numero>
+							<#else>
+							<Numero/>
+							</#if>
+						</TelefonoLaboral>
+					</ContactoPrincipal>
+					<DireccionPrincipal>
+						<#if (payload.body.results.policyData.holder.mainAddress)??>
+						<LineaDireccion1>${payload.body.results.policyData.holder.mainAddress}</LineaDireccion1>
+						<#else>
+						<LineaDireccion1/>
+						</#if>
+						<Ciudad>
+							<Nombre/>
+						</Ciudad>
+					</DireccionPrincipal>
+					<Personas>
+						<Persona>
+							<Id>${payload.body.results.policyData.holder.person.id}</Id>
+							<IdTipoDocumento>${payload.body.results.policyData.holder.person.idTypeId}</IdTipoDocumento>
+							<tipoIdentificacion>${payload.body.results.policyData.holder.person.idType}</tipoIdentificacion>
+							<PrimerNombre>${payload.body.results.policyData.holder.person.firstName}</PrimerNombre>
+							<SegundoNombre>${payload.body.results.policyData.holder.person.middleName}</SegundoNombre>
+							<#if (payload.body.results.policyData.holder.person.lastName)??>
+							<PrimerApellido>${payload.body.results.policyData.holder.person.lastName}</PrimerApellido>
+							<#else>
+							<PrimerApellido/>
+							</#if>
+							<#if (payload.body.results.policyData.holder.person.familyName)??>
+							<SegundoApellido>${payload.body.results.policyData.holder.person.familyName}</SegundoApellido>							
+							</#if>
+							<Identificacion>${payload.body.results.policyData.holder.person.idNumber}</Identificacion>
+							<NombreCompleto>${payload.body.results.policyData.holder.person.name}</NombreCompleto>
+							<#if (payload.body.results.policyData.holder.person.gender)??>
+							<Genero>${payload.body.results.policyData.holder.person.gender}</Genero>
+							<#else>
+							<Genero/>
+							</#if>
+							<PersonaId>${payload.body.results.policyData.holder.person.personId}</PersonaId>
+						</Persona>
+					</Personas>
+					<InformacionFinanciera>
+						<ActividadEconomica>
+							<#if (payload.body.results.policyData.holder.financialData.economicActivity)??>
+							<Codigo>${payload.body.results.policyData.holder.financialData.economicActivity}</Codigo>
+							<#else>
+							<Codigo/>
+							</#if>							
+						</ActividadEconomica>
+					</InformacionFinanciera>
+				</Tomador>
+				<Vigencia>
+					<FechaFinal>${payload.body.results.policyData.vigency.endDate}</FechaFinal>
+					<FechaInicio>${payload.body.results.policyData.vigency.startDate}</FechaInicio>
+					<FechaCreacion>${payload.body.results.policyData.vigency.createDate}</FechaCreacion>
+				</Vigencia>
+				<Vehiculo>
+					<Id>${payload.body.results.policyData.vehicle.id?c}</Id>
+					<FasecoldaCode>${payload.body.results.policyData.vehicle.codeFasecolda?c}</FasecoldaCode>
+					<IdClase>${payload.body.results.policyData.vehicle.classId}</IdClase>
+					<Clase>${payload.body.results.policyData.vehicle.class}</Clase>
+					<#if (payload.body.results.policyData.vehicle.idTransportServiceType)??>
+					<IdTipoServicioTransporte>${payload.body.results.policyData.vehicle.idTransportServiceType}</IdTipoServicioTransporte>
+					<#else>
+					<IdTipoServicioTransporte/>
+					</#if>
+					<TipoServicio>${payload.body.results.policyData.vehicle.serviceType}</TipoServicio>
+					<IdTipoServicioRunt>${payload.body.results.policyData.vehicle.idRUNTServiceType}</IdTipoServicioRunt>
+					<NumeroChasis>${payload.body.results.policyData.vehicle.chassisNumber}</NumeroChasis>
+					<NumeroMotor>${payload.body.results.policyData.vehicle.engineNumber}</NumeroMotor>
+					<NumeroVin>${payload.body.results.policyData.vehicle.vin}</NumeroVin>
+					<CapacidadTotalPasajeros>${payload.body.results.policyData.vehicle.occupiedSeats}</CapacidadTotalPasajeros>
+					<Cilindraje>${payload.body.results.policyData.vehicle.engineCapacity}</Cilindraje>
+					<IdTipoVehiculo>${payload.body.results.policyData.vehicle.vehicleType}</IdTipoVehiculo>
+					<IdTipoCarroceria>${payload.body.results.policyData.vehicle.bodyType}</IdTipoCarroceria>
+					<CodConducto>${payload.body.results.policyData.vehicle.ductType}</CodConducto>
+					<Conducto>${payload.body.results.policyData.vehicle.duct}</Conducto>
+					<IdVehiculo>${payload.body.results.policyData.vehicle.vehicleId?c}</IdVehiculo>
+					<DescripcionClase>${payload.body.results.policyData.vehicle.classDescription}</DescripcionClase>
+					<Color>${payload.body.results.policyData.vehicle.color}</Color>
+					<FechaVencimientoPolizaAnterior>${payload.body.results.policyData.vehicle.lastVigencyDate}</FechaVencimientoPolizaAnterior>
+					<CapacidadCarga>${payload.body.results.policyData.vehicle.weightCapacity}</CapacidadCarga>
+					<ModeloAnioVehiculo>${payload.body.results.policyData.vehicle.modelYear?c}</ModeloAnioVehiculo>
+					<Placa>${payload.body.results.policyData.vehicle.plate}</Placa>
+					<#if (payload.body.results.policyData.vehicle.idBrandFasecolda)??>
+					<FasecoldaMarcaID>${payload.body.results.policyData.vehicle.idBrandFasecolda}</FasecoldaMarcaID>
+					<#else>
+					<FasecoldaMarcaID/>
+					</#if>
+					<#if (payload.body.results.policyData.vehicle.idModelFasecolda)??>
+					<FasecoldaModeloID>${payload.body.results.policyData.vehicle.idModelFasecolda}</FasecoldaModeloID>
+					<#else>
+					<FasecoldaModeloID/>
+					</#if>					
+					<IdLinea>${payload.body.results.policyData.vehicle.idLine}</IdLinea>
+					<IdMarca>${payload.body.results.policyData.vehicle.idBrand}</IdMarca>
+					<IdModelo>${payload.body.results.policyData.vehicle.idModel}</IdModelo>
+					<#if (payload.body.results.policyData.vehicle.originCountry)??>
+					<PaisOrigen>${payload.body.results.policyData.vehicle.originCountry}</PaisOrigen>
+					<#else>
+					<PaisOrigen/>
+					</#if>					
+					<Marca>${payload.body.results.policyData.vehicle.brand}</Marca>
+					<Modelo>${payload.body.results.policyData.vehicle.model}</Modelo>
+					<Linea>${payload.body.results.policyData.vehicle.line}</Linea>
+					<IdPaisOrigen>${payload.body.results.policyData.vehicle.originCountryId}</IdPaisOrigen>
+					<IdCiudad>${payload.body.results.policyData.vehicle.idCity}</IdCiudad>
+					<Version>${payload.body.results.policyData.vehicle.version}</Version>
+					<#if (payload.body.results.policyData.vehicle.idVersion)??>
+					<IdVersion>${payload.body.results.policyData.vehicle.idVersion}</IdVersion>
+					<#else>
+					<IdVersion/>
+					</#if>					
+				</Vehiculo>
+				<NumeroPoliza>${payload.body.results.policyData.policyNumber}</NumeroPoliza>
+				<TasaRUNT>${payload.body.results.policyData.RUNTTare?string("0.00")}</TasaRUNT>
+				<ClaveConvenio>${payload.body.results.policyData.agreementKey}</ClaveConvenio>
+				<#if (payload.body.results.policyData.vehicle.accountId)??>
+				<IdCuenta>${payload.body.results.policyData.vehicle.accountId}</IdCuenta>				
+				</#if>
+				<#if (payload.body.results.policyData.vehicle.referenceNumber)??>
+				<NumeroReferencia>${payload.body.results.policyData.vehicle.referenceNumber}</NumeroReferencia>				
+				</#if>				
+			</DatosSoat>
+		</SOAT>
+	</Body>
+</v1:ConsultarPolizaSOATPorNumerodePolizaResp>
+	<#else>
+	<ns0:ConsultarPolizaSOATPorNumerodePolizaResp xmlns:ns0="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaResp/V1.0">
+         <Header>
+            <Criticidad>Error</Criticidad>
+            <IdCorrelacionConsumidor>${ctx.idCorrelacionConsumidor}</IdCorrelacionConsumidor>
+            <IdTransaccion>${ctx.idTransaccion}</IdTransaccion>
+            <RtaCodCanal>${payload.MsgRsHdr.error.Status.StatusCode}</RtaCodCanal>
+            <RtaCodHost>200</RtaCodHost>
+            <RtaDescCanal>${payload.MsgRsHdr.error.Status.StatusDesc}</RtaDescCanal>
+            <RtaDescHost>La consulta no esta disponible por el momento, por favor intente más tarde</RtaDescHost>
+            <Metodo>ConsultarPolizaSOATPorNumeroPoliza</Metodo>
+            <Proceso>PolizaSOAT</Proceso>
+            <Categoria>Error Negocio</Categoria>
+            <FlagException>true</FlagException>
+         </Header>
+      </ns0:ConsultarPolizaSOATPorNumerodePolizaResp>
+	</#if>]]></format>
+                <args/>
+            </payloadFactory>
+        </case>
+        <default>
+            <payloadFactory media-type="xml" template-type="freemarker">
+                <format><![CDATA[<ns0:ConsultarPolizaSOATPorNumerodePolizaResp xmlns:ns0="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaResp/V1.0">
+         <Header>
+            <Criticidad>Error</Criticidad>
+            <IdCorrelacionConsumidor>${ctx.idCorrelacionConsumidor}</IdCorrelacionConsumidor>
+            <IdTransaccion>${ctx.idTransaccion}</IdTransaccion>
+            <RtaCodCanal>100</RtaCodCanal>
+            <RtaCodHost>100</RtaCodHost>
+            <RtaDescCanal>La consulta no esta disponible por el momento, por favor intente más tarde</RtaDescCanal>
+            <RtaDescHost>La consulta no esta disponible por el momento, por favor intente más tarde</RtaDescHost>
+            <Metodo>ConsultarPolizaSOATPorNumeroPoliza</Metodo>
+            <Proceso>PolizaSOAT</Proceso>
+            <Categoria>Error Téçnico</Categoria>
+            <FlagException>true</FlagException>
+         </Header>
+      </ns0:ConsultarPolizaSOATPorNumerodePolizaResp>
+]]></format>
+                <args/>
+            </payloadFactory>
+        </default>
+    </switch>
+    <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+    <property name="contentType" scope="axis2" type="STRING" value="text/xml"/>
+    <respond/>
+</sequence>

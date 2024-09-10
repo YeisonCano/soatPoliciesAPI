@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetValiditySOATPolicyOutSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log>
+        <property name="SeqName" value="GetValiditySOATPolicyOutSequence"/>
+        <property expression="string($body//ns:GetSoatByPlateResult/ns:Error)" name="Error" xmlns:ns="http://tempuri.org/"/>
+    </log>
+    <filter regex="200" source="$axis2:HTTP_SC">
+        <then>
+            <log>
+                <property expression="$body" name="PayloadResp"/>
+            </log>
+        </then>
+        <else>
+            <sequence key="GetValiditySOATPolicyFaultSequence"/>
+        </else>
+    </filter>
+    <filter regex="true" source="string($body//ns:GetSoatByPlateResult/ns:Error)" xmlns:ns="http://tempuri.org/">
+        <then>
+            <propertyGroup>
+                <property name="ERROR_CODE" scope="default" type="STRING" value="0"/>
+                <property expression="$body//ns:GetSoatByPlateResult/ns:Message" name="ERROR_MESSAGE" scope="default" type="STRING"/>
+                <property name="categoria" scope="default" type="STRING" value="Error Negocio"/>
+            </propertyGroup>
+            <sequence key="GetValiditySOATPolicyFaultSequence"/>
+        </then>
+        <else/>
+    </filter>
+    <payloadFactory media-type="json" template-type="freemarker">
+        <format><![CDATA[{
+  "MsgRsHdr": {
+  "error": null
+  },
+  "body":{
+  "results": [
+  <#assign x = 1> 
+  <#list payload["//*[local-name()='GetSoatByPlateResult']/*[local-name()='DataSoat']/*[local-name()='DataSoat']"] as node>
+  <#if x gt 1>,</#if>
+    {
+      "tareCode": "${node["*[local-name()='cod_tarifa']"]}",
+      "owner": {
+        "name": "${node["*[local-name()='txt_nombre']"]}",
+        "lastName": "${node["*[local-name()='txt_apellido1']"]}",
+        "familyName": "${node["*[local-name()='txt_apellido2']"]}",
+        "telephone": "${node["*[local-name()='txt_telefono']"]}",
+        "idType": "${node["*[local-name()='cod_tipo_doc']"]}",
+        "idNumber": "${node["*[local-name()='nro_doc']"]}",
+        "email": "${node["*[local-name()='correo_electronico']"]}",
+        "address": "${node["*[local-name()='direccion_tomador']"]}",
+        "city": "${node["*[local-name()='ciudad_residencia']"]}"
+              },
+      "vehicle": {
+         "plate": "${node["*[local-name()='txt_patente']"]}",
+         "engineNumber": "${node["*[local-name()='txt_motor']"]}",
+         "vinNumber": "${node["*[local-name()='txt_chasis']"]}",
+         "brand": "${node["*[local-name()='marca_soat']"]}",
+         "model": "${node["*[local-name()='aaaa_fabrica']"]}",
+         "line": "${node["*[local-name()='modelo_soat']"]}",
+         "engineCapacity": "${node["*[local-name()='cnt_cc']"]}",
+         "use": "${node["*[local-name()='servicio']"]}",
+         "type": "${node["*[local-name()='tipo_vehiculo']"]}",
+         "weightLoad": "${node["*[local-name()='cnt_toneladas']"]}",
+         "passengersNumber": "${node["*[local-name()='cnt_ocupantes']"]}",
+         "idLine": "${node["*[local-name()='cod_modelo_soat']"]}",
+         "idBrand": "${node["*[local-name()='cod_marca_soat']"]}",
+         "idUse": "${node["*[local-name()='cod_tipo_veh']"]}",
+      },
+      "validity": {
+        "startDate": "${node["*[local-name()='fec_vig_desde']"]}",
+        "endDate": "${node["*[local-name()='fec_vig_hasta']"]}",
+        "createDate": "${node["*[local-name()='fec_emi']"]}"
+      } ,
+      "subsidiaryCode": "${node["*[local-name()='cod_suc']"]}",
+      "subsidiary": "${node["*[local-name()='txt_nom_suc']"]}", 
+      "producer": "${node["*[local-name()='productor']"]}",  
+      "cityCode": "${node["*[local-name()='cod_municipio']"]}",
+      "city": "${node["*[local-name()='ciudad_expedicion']"]}", 
+      "formReemNumber": "${node["*[local-name()='nro_formulario_reem']"]}", 
+      "formNumber": "${node["*[local-name()='nro_formulario']"]}", 
+      "classId": "${node["*[local-name()='cod_clase_soat']"]}",
+      "class": "${node["*[local-name()='clase_soat']"]}",
+      "primeTaxes": "${node["*[local-name()='imp_prima']"]}",
+      "primeDecree": "${node["*[local-name()='imp_decreto']"]}",
+      "rechargeTaxes": "${node["*[local-name()='imp_recargo']"]}",
+      "primeTotalTaxes": "${node["*[local-name()='imp_prima_total']"]}",
+      "policyNumber": "${node["*[local-name()='nro_pol']"]}"
+    }
+	<#assign x++>
+	</#list>
+  ]
+}
+}]]></format>
+        <args/>
+    </payloadFactory>
+    <respond/>
+</sequence>

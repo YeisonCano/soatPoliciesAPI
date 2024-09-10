@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/policyManagement/soatPoliciesAPI/v2" name="soatPoliciesAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource faultSequence="SoatPoliciesFaultSequence" methods="GET" uri-template="/policies/issuingState">
+        <inSequence>
+            <sequence key="GetNotifactionSISEInSequence"/>
+        </inSequence>
+        <outSequence>
+            <sequence key="GetNotifactionSISEOutSequence"/>
+        </outSequence>
+    </resource>
+    <resource faultSequence="SoatPoliciesFaultSequence" inSequence="SoatPoliciesPaymentsApplyAPIInSequence" methods="POST" uri-template="/payments/apply">
+        <outSequence/>
+    </resource>
+    <resource faultSequence="SoatPoliciesFaultSequence" inSequence="SoatPoliciesRenewalReferenciaVoucherAPIInSequence" methods="GET" uri-template="/renewal/{Referencia}/voucher?NoFormulario={NoFormulario}">
+        <outSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/policies/documents/{plate}/{idnumber}">
+        <inSequence>
+            <sequence key="GetDocumentsSOATPolicyInSequence"/>
+        </inSequence>
+        <outSequence>
+            <sequence key="GetDocumentsSOATPolicyOutSequence"/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="GetDocumentsSOATPolicyFaultSequence"/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" uri-template="/policies/{plate}">
+        <inSequence>
+            <sequence key="GetSoatSiseInSequence"/>
+        </inSequence>
+        <outSequence>
+            <sequence key="GetSoatSiseOutSequence"/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="GetSoatSiseFaultSequence"/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" uri-template="/policies/{policyNumber}/{agreementKey}">
+        <inSequence>
+            <log>
+                <property name="SeqName" value="ConsultarPolizaSOATporNumeroPolizaInSequence"/>
+                <property expression="get-property('uri.var.policyNumber')" name="policyNumber"/>
+                <property expression="get-property('uri.var.agreementKey')" name="agreementKey"/>
+            </log>
+            <sequence key="soatPolicyAPIV2ConsultarPolizaSOATporNumeroPolizaInSequence"/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="soatPolicyAPIV2ConsultarPolizaSOATporNumeroPolizaFaultSequence"/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" uri-template="/taxes">
+        <inSequence>
+            <sequence key="soatPoliciesAPIv2ConsultarImpuestosGPSOATInSequence"/>
+        </inSequence>
+        <outSequence>
+            <sequence key="soatPoliciesAPIv2ConsultarImpuestosGPSOATOutSequence"/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="soatPoliciesAPIv2ConsultarImpuestosGPSOATFaultSequence"/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" uri-template="/policies/validity/{plate}/{engineId}/{vinId}/vehicle">
+        <inSequence>
+            <sequence key="GetValiditySOATPolicyInSequence"/>
+        </inSequence>
+        <outSequence>
+            <sequence key="GetValiditySOATPolicyOutSequence"/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="GetValiditySOATPolicyFaultSequence"/>
+        </faultSequence>
+    </resource>
+</api>
