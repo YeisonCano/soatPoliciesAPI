@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetNotifactionSISEInSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property expression="get-property('query.param.idprocess')" name="idprocess" scope="default" type="STRING"/>
+        <property expression="get-property('query.param.accountname')" name="accountname" scope="default" type="STRING"/>
+        <property expression="$trp:Canal" name="Canal" scope="default" type="STRING"/>
+        <property expression="$trp:IdCorrelacionConsumidor" name="IdCorrelacionConsumidor" scope="default" type="STRING"/>
+        <property expression="$trp:PeticionFecha" name="PeticionFecha" scope="default" type="STRING"/>
+        <property expression="$trp:Usuario" name="Usuario" scope="default" type="STRING"/>
+    </propertyGroup>
+    <payloadFactory media-type="json" template-type="freemarker">
+        <format><![CDATA[<#if ctx.Canal?has_content == false>
+	{
+		"mensaje": "noCanal"
+	}	
+<#elseif ctx.IdCorrelacionConsumidor?has_content == false>
+	{
+		"mensaje": "noIdCorrelacionConsumidor"
+	}	
+<#elseif ctx.PeticionFecha?has_content == false>
+	{
+		"mensaje": "noPeticionFecha"
+	}
+	<#elseif ctx.IdProcess?has_content == false>
+	{
+		"mensaje": "noIdProcess"
+	}
+	<#else>
+	{
+		"mensaje": "continua"
+	}
+	</#if> 
+	<#if ctx.PeticionFecha?has_content>
+		<#if ctx.PeticionFecha?matches("^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}T[0-9]{2}\\:[0-9]{2}\\:[0-9]{2}$")>
+  			{
+				"mensaje": "noFormatoPeticionFecha"
+			}
+		</#if>
+	</#if>  
+]]></format>
+        <args/>
+    </payloadFactory>
+    <log>
+        <property expression="get-property('query.param.idprocess')" name="idprocess"/>
+        <property expression="get-property('query.param.accountname')" name="accountname"/>
+        <property expression="$trp:Canal" name="Canal"/>
+        <property expression="$trp:IdCorrelacionConsumidor" name="IdCorrelacionConsumidor"/>
+        <property expression="$trp:PeticionFecha" name="PeticionFecha"/>
+        <property expression="$trp:Usuario" name="Usuario"/>
+        <property expression="json-eval($)" name="MensajeRequest"/>
+    </log>
+    <payloadFactory media-type="xml" template-type="freemarker">
+        <format><![CDATA[
+<#setting locale="en_US">            
+<#setting number_format="0.##">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://AXAColpatria.Tarea.GestionPolizasSOAT.Notificacion_V2.Esquemas/ConsultarEstadoNotificacionSISEReq/V1.0">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <v1:ConsultarEstadoNotificacionSISEReq>
+         <Header>
+         	<#if (ctx.Canal)?has_content>
+            <Canal>${ctx.Canal}</Canal>
+            </#if>
+            <#if (ctx.IdCorrelacionConsumidor)?has_content>
+            <IdCorrelacionConsumidor>${ctx.IdCorrelacionConsumidor}</IdCorrelacionConsumidor>
+            </#if>
+            <#if (ctx.PeticionFecha)?has_content>
+            <PeticionFecha>${ctx.PeticionFecha}</PeticionFecha>
+            </#if>
+            <#if (ctx.Usuario)?has_content>
+            <Usuario>${ctx.Usuario}</Usuario>
+            </#if>
+         </Header>
+         <Body>
+         	<#if (ctx.idprocess)?has_content>
+            <IdProcess>${ctx.idprocess}</IdProcess>
+            </#if>
+            <#if (ctx.accountname)?has_content>
+            <AccountName>${ctx.accountname}</AccountName>
+            </#if>
+         </Body>
+      </v1:ConsultarEstadoNotificacionSISEReq>
+   </soapenv:Body>
+</soapenv:Envelope>
+]]></format>
+        <args/>
+    </payloadFactory>
+    <log level="full"/>
+    <propertyGroup>
+        <property action="remove" name="canal" scope="transport"/>
+        <property action="remove" name="idCorrelacionConsumidor" scope="transport"/>
+        <property action="remove" name="idTransaccion" scope="transport"/>
+        <property action="remove" name="peticionFecha" scope="transport"/>
+        <property action="remove" name="usuario" scope="transport"/>
+        <property action="remove" name="TRANSPORT_HEADERS" scope="axis2"/>
+        <property expression="//idDocumento[1]/text()[1]" name="idDocumento" scope="default" type="STRING"/>
+        <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+        <property name="messageType" scope="axis2" type="STRING" value="text/xml;charset=UTF-8"/>
+        <property name="CHARSET_ENCODING" scope="axis2" type="STRING" value="UTF-8"/>
+        <property name="REST_URL_POSTFIX" scope="axis2" type="STRING" value=""/>
+        <property name="SOAPAction" scope="transport" type="STRING" value="ConsultarEstadoNotificacionSOAT"/>
+    </propertyGroup>
+    <send>
+        <endpoint key="ConsultasSOATEndPoint"/>
+    </send>
+</sequence>

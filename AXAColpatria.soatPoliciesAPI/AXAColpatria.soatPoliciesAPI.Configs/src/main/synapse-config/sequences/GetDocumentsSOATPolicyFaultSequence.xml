@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetDocumentsSOATPolicyFaultSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log category="ERROR" level="full">
+        <property name="SeqName" value="GetDocumentsSOATPolicyFaultSequence"/>
+    </log>
+    <switch source="$axis2:HTTP_SC">
+        <case regex="500">
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+    "MsgRsHdr": {&#xd;
+        "error": {&#xd;
+            "Status": {&#xd;
+				"StatusCode": 200,&#xd;
+                "Severity": null,&#xd;
+                "StatusDesc": "La consulta no esta disponible por el momento, por favor intente más tarde",&#xd;
+                "AdditionalStatus": {&#xd;
+					"ServerStatusCode": $1,&#xd;
+                    "Category": "$3",&#xd;
+                    "StatusDesc": "$2"&#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+"body":null&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="$axis2:HTTP_SC"/>
+                    <arg evaluator="xml" expression="string($body//faultstring)"/>
+                    <arg evaluator="xml" expression="get-property('categoria')"/>
+                </args>
+            </payloadFactory>
+        </case>
+        <case regex="200">
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+    "MsgRsHdr": {&#xd;
+        "error": {&#xd;
+            "Status": {&#xd;
+				"StatusCode": 200,&#xd;
+                "Severity": null,&#xd;
+                "StatusDesc": "$1",&#xd;
+                "AdditionalStatus": {&#xd;
+					"ServerStatusCode": $2,&#xd;
+                    "Category": "$3",&#xd;
+                    "StatusDesc": "$4"&#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+"body":null&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('ERROR_DETAIL')"/>
+                    <arg evaluator="xml" expression="get-property('ERROR_CODE')"/>
+                    <arg evaluator="xml" expression="get-property('categoria')"/>
+                    <arg evaluator="xml" expression="get-property('ERROR_MESSAGE')"/>
+                </args>
+            </payloadFactory>
+        </case>
+        <default>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+    "MsgRsHdr": {&#xd;
+        "error": {&#xd;
+            "Status": {&#xd;
+				"StatusCode": 200,&#xd;
+                "Severity": null,&#xd;
+                "StatusDesc": "La consulta no esta disponible por el momento, por favor intente más tarde",&#xd;
+                "AdditionalStatus": {&#xd;
+					"ServerStatusCode": $1,&#xd;
+                    "Category": "$3",&#xd;
+                    "StatusDesc": "$2"&#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+"body":null&#xd;
+}</format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('ERROR_CODE')"/>
+                    <arg evaluator="xml" expression="get-property('ERROR_MESSAGE')"/>
+                    <arg evaluator="xml" expression="get-property('categoria')"/>
+                </args>
+            </payloadFactory>
+        </default>
+    </switch>
+    <property name="HTTP_SC" scope="axis2" type="STRING" value="200"/>
+    <respond/>
+</sequence>

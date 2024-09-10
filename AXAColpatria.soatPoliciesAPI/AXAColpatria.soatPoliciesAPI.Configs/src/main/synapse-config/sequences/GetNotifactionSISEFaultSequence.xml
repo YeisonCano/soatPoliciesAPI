@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetNotifactionSISEFaultSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log category="ERROR"/>
+    <switch source="$ctx:Categoria">
+        <case regex="Error Negocio">
+            <payloadFactory media-type="json" template-type="freemarker">
+                <format><![CDATA[{
+    "MsgRsHdr": {
+        "error": {
+            "Status": {
+                "StatusCode": 200,
+                "Severity": null,
+                "StatusDesc": "La consulta no esta disponible por el momento, por favor intente más tarde",
+                "AdditionalStatus": {
+                    "ServerStatusCode": ${ctx.rtaCodHost},
+                    "Category": "${ctx.Categoria}",
+                    "StatusDesc": "${ctx.ProcessMessage}"
+                }
+            }
+        }
+    },
+    "body": null
+}
+]]></format>
+                <args/>
+            </payloadFactory>
+        </case>
+        <default>
+            <payloadFactory media-type="json" template-type="freemarker">
+                <format><![CDATA[{
+    "MsgRsHdr": {
+        "error": {
+            "Status": {
+                "StatusCode": 200,
+                "Severity": null,
+                "StatusDesc": "La consulta no está disponible por el momento, por favor intente más tarde",
+                "AdditionalStatus": {
+                    "ServerStatusCode": 500,
+                    "Category": "Error Técnico",
+                    "StatusDesc": "<#assign start = ctx.faultstring?index_of('following error:') + 16 />${ctx.faultstring?substring(start + 1, ctx.faultstring?index_of('.', start))}"
+                }
+            }
+        }
+    },
+    "body": null
+}
+]]></format>
+                <args/>
+            </payloadFactory>
+        </default>
+    </switch>
+    <property name="HTTP_SC" scope="axis2" type="STRING" value="200"/>
+    <respond/>
+</sequence>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="SBSSoatPoliciesAPIEndPoint" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="get" uri-template="{uri.var.wso2MIBaseUrl}/policyManagement/sbsSoatPoliciesAPI/v1/policies/{uri.var.policyNumber}/{uri.var.agreementKey}">
+        <timeout>
+            <duration>10000</duration>
+            <responseAction>fault</responseAction>
+        </timeout>
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </http>
+</endpoint>

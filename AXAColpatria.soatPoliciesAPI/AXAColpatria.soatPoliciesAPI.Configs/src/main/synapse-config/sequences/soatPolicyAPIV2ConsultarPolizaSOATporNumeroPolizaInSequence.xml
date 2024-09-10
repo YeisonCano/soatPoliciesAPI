@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="soatPolicyAPIV2ConsultarPolizaSOATporNumeroPolizaInSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log>
+        <property name="SeqName" value="soatPolicyAPIV2ConsultarPolizaSOATporNumeroPolizaInSequence"/>
+        <property expression="get-property('uri.var.policyNumber')" name="policyNumber"/>
+        <property expression="get-property('uri.var.agreementKey')" name="agreementKey"/>
+    </log>
+    <propertyGroup>
+        <property expression="get-property('file', 'wso2MIBaseUrl')" name="uri.var.wso2MIBaseUrl" scope="default" type="STRING"/>
+        <property expression="get-property('uri.var.policyNumber')" name="policyNumber" scope="default" type="STRING"/>
+        <property expression="get-property('uri.var.agreementKey')" name="agreementKey" scope="default" type="STRING"/>
+        <property name="categoria" scope="default" type="STRING" value="Error Técnico"/>
+    </propertyGroup>
+    <call>
+        <endpoint key="SBSSoatPoliciesAPIEndPoint"/>
+    </call>
+    <loopback/>
+</sequence>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetSoatSiseInSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log>
+        <property name="SeqName" value="GetSoatSiseInSequence"/>
+    </log>
+    <propertyGroup>
+        <property expression="get-property('uri.var.plate')" name="plate" scope="default" type="STRING"/>
+        <property name="categoria" scope="default" type="STRING" value="Error Técnico"/>
+    </propertyGroup>
+    <payloadFactory media-type="xml">
+        <format>
+            <tem:GetSoatByPlate xmlns:tem="http://tempuri.org/">
+                <tem:vehiclePlate>$1</tem:vehiclePlate>
+            </tem:GetSoatByPlate>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="get-property('plate')"/>
+        </args>
+    </payloadFactory>
+    <property name="SOAPAction" scope="transport" type="STRING" value="http://tempuri.org/IConsultServiceSoat/GetSoatByPlate"/>
+    <send>
+        <endpoint key="ConsultServiceSOATEndPoint"/>
+    </send>
+</sequence>

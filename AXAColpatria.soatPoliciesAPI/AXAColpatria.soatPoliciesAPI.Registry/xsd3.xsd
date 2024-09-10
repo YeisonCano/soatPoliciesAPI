@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaResp/V1.0" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" targetNamespace="http://AXAColpatria.Entidad.PolizaSOAT.Consultas.Esquemas/ConsultarPolizaSOATPorNumerodePolizaResp/V1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ConsultarPolizaSOATPorNumerodePolizaResp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Header">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="1" maxOccurs="1" name="Criticidad" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="IdCorrelacionConsumidor" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="IdTransaccion" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="RtaCodCanal" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="RtaCodHost" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="RtaDescCanal" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="RtaDescHost" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="Metodo" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="Proceso" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="Categoria" type="xs:string" />
+              <xs:element minOccurs="1" maxOccurs="1" name="FlagException" type="xs:boolean" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="Body">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="SOAT">
+                <xs:complexType>
+                  <xs:sequence minOccurs="0">
+                    <xs:element minOccurs="0" name="PolizaSOAT">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" maxOccurs="1" name="Id" type="xs:int" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="IdTarifa" type="xs:int" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ImpPrima" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorComisionAgentePV" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorReteIcaPV" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorReteFuentePV" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="PorcentajeComision" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorReteIcaAsesor" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorReteFuenteAsesor" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorTotalPoliza" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="GastoEnvio" type="xs:decimal" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="IdPuntoVenta" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="TransferenciaFPV" type="xs:decimal" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="CodigoAseguradora" type="xs:string" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="CodigoSucursal" type="xs:string" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="ClaveProductor" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="NumeroFormulario" type="xs:long" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="CiudadExpedicion" type="xs:string" />
+                          <xs:element minOccurs="0" maxOccurs="1" name="Observacion" type="xs:string" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="IdEstadoEmision" type="xs:short" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="Estado" type="xs:string" />
+                          <xs:element name="PermiteAnularRenovar" type="xs:boolean" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="1" maxOccurs="1" name="ContribucionesTransferencias">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorContribucionFOSYGA" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ValorTransferenciaFONSAT" type="xs:decimal" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="DatosSoat">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" name="Propietario">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="0" maxOccurs="1" name="ContactoPrincipal">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+                                      <xs:element minOccurs="0" maxOccurs="1" name="TelefonoLaboral">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Numero" type="xs:string" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" maxOccurs="1" name="DireccionPrincipal">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="LineaDireccion1" type="xs:string" />
+                                      <xs:element minOccurs="0" maxOccurs="1" name="Ciudad">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Nombre" type="xs:string" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" maxOccurs="1" name="Personas">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="Persona">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="1" maxOccurs="1" name="Id" type="xs:long" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="IdTipoDocumento" type="xs:short" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="tipoIdentificacion" type="xs:string" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="PrimerNombre" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="SegundoNombre" type="xs:string" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="PrimerApellido" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="SegundoApellido" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Identificacion" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="NombreCompleto" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Genero" type="xs:string" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="PersonaId" type="xs:long" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" maxOccurs="1" name="InformacionFinanciera">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="ActividadEconomica">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Codigo" type="xs:string" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="Tomador">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="0" maxOccurs="1" name="ContactoPrincipal">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+                                      <xs:element minOccurs="0" maxOccurs="1" name="TelefonoLaboral">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Numero" type="xs:string" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" maxOccurs="1" name="DireccionPrincipal">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="LineaDireccion1" type="xs:string" />
+                                      <xs:element minOccurs="0" maxOccurs="1" name="Ciudad">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Nombre" type="xs:string" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" maxOccurs="1" name="Personas">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="Persona">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="1" maxOccurs="1" name="Id" type="xs:long" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="IdTipoDocumento" type="xs:short" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="tipoIdentificacion" type="xs:string" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="PrimerNombre" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="SegundoNombre" type="xs:string" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="PrimerApellido" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="SegundoApellido" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Identificacion" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="NombreCompleto" type="xs:string" />
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Genero" type="xs:string" />
+                                            <xs:element minOccurs="1" maxOccurs="1" name="PersonaId" type="xs:long" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element minOccurs="0" maxOccurs="1" name="InformacionFinanciera">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="1" name="ActividadEconomica">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element minOccurs="0" maxOccurs="1" name="Codigo" type="xs:string" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="Vigencia">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" maxOccurs="1" name="FechaFinal" type="xs:dateTime" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="FechaInicio" type="xs:dateTime" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="FechaCreacion" type="xs:dateTime" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="Vehiculo">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element minOccurs="1" maxOccurs="1" name="Id" type="xs:int" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="FasecoldaCode" type="xs:short" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdClase" type="xs:int" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="Clase" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdTipoServicioTransporte" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="TipoServicio" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdTipoServicioRunt" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="NumeroChasis" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="NumeroMotor" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="NumeroVin" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="CapacidadTotalPasajeros" type="xs:int" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="Cilindraje" type="xs:long" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdTipoVehiculo" type="xs:int" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="IdTipoCarroceria" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="CodConducto" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="Conducto" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdVehiculo" type="xs:int" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="DescripcionClase" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="Color" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="FechaVencimientoPolizaAnterior" type="xs:dateTime" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="CapacidadCarga" type="xs:int" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="ModeloAnioVehiculo" type="xs:int" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="Placa" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="FasecoldaMarcaID" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="FasecoldaModeloID" type="xs:string" />
+                                <xs:element name="IdLinea" type="xs:int" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdMarca" type="xs:int" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="IdModelo" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="PaisOrigen" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="Marca" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="Modelo" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="Linea" type="xs:string" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdPaisOrigen" type="xs:int" />
+                                <xs:element minOccurs="1" maxOccurs="1" name="IdCiudad" type="xs:short" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="Version" type="xs:string" />
+                                <xs:element minOccurs="0" maxOccurs="1" name="IdVersion" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="1" maxOccurs="1" name="NumeroPoliza" type="xs:long" />
+                          <xs:element minOccurs="0" name="TasaRUNT" type="xs:decimal" />
+                          <xs:element minOccurs="1" maxOccurs="1" name="ClaveConvenio" type="xs:string" />
+                          <xs:element minOccurs="0" name="IdCuenta" nillable="true" type="xs:short" />
+                          <xs:element minOccurs="0" name="NumeroReferencia" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="AXAColpatria/Entidad/GestionPolizas/SOAT/ConsultasSOAT/ConsultasSOAT.svc" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <switch source="get-property('Action')">
+                <case regex="ConsultarPolizaSOATPorNumerodePoliza">
+                    <property name="ExecutedAction" scope="default" type="STRING" value="ConsultarPolizaSOATPorNumerodePoliza"/>
+                    <sequence key="ConsultarPolizaSOATporNumeroPolizaInSequence"/>
+                </case>
+                <case regex=".*+">
+                    <payloadFactory media-type="xml">
+                        <format>
+                            <message xmlns="">Action not implemented</message>
+                        </format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+    <publishWSDL key="conf:custom/ConsultasSOAT.wsdl" preservePolicy="true">
+        <resource key="conf:custom/xsd2.xsd" location="xsd2.xsd"/>
+        <resource key="conf:custom/xsd3.xsd" location="xsd3.xsd"/>
+    </publishWSDL>
+    <parameter name="useOriginalwsdl">true</parameter>
+    <parameter name="modifyUserWSDLPortAddress">false</parameter>
+</proxy>

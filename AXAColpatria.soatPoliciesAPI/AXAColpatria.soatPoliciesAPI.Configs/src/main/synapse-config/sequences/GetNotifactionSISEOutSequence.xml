@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetNotifactionSISEOutSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property expression="//rtaDescCanal[1]/text()[1]" name="rtaDescCanal" scope="default" type="STRING"/>
+        <property expression="//rtaDescHost[1]/text()[1]" name="rtaDescHost" scope="default" type="STRING"/>
+        <property expression="//rtaCodHost[1]/text()[1]" name="rtaCodHost" scope="default" type="STRING"/>
+        <property expression="//descripcionDocumento[1]/text()[1]" name="descripcionDocumento" scope="default" type="STRING"/>
+        <property expression="//*[local-name()='Status']/text()" name="Status" scope="default" type="STRING"/>
+        <property expression="//*[local-name()='ProcessMessage']/text()" name="ProcessMessage" scope="default" type="STRING"/>
+        <property expression="//*[local-name()='FlagException']/text()" name="FlagException" scope="default" type="STRING"/>
+        <property expression="//*[local-name()='Categoria']/text()" name="Categoria" scope="default" type="STRING"/>
+        <property expression="//*[local-name()='IdProcess']/text()" name="IdProcess" scope="default" type="STRING"/>
+        <property expression="//*[local-name()='DateProcess']/text()" name="DateProcess" scope="default" type="STRING"/>
+        <property expression="//*[local-name()='faultstring']/text()" name="faultstring" scope="default" type="STRING"/>
+    </propertyGroup>
+    <log>
+        <property expression="//*[local-name()='Status']/text()" name="Status"/>
+        <property expression="//*[local-name()='ProcessMessage']/text()" name="ProcessMessage"/>
+        <property expression="//*[local-name()='FlagException']/text()" name="FlagException"/>
+        <property expression="//*[local-name()='IdProcess']/text()" name="IdProcess"/>
+    </log>
+    <switch source="$ctx:FlagException">
+        <case regex="false">
+            <payloadFactory media-type="json" template-type="freemarker">
+                <format><![CDATA[
+{
+  "MsgRsHdr": {
+    "error": null
+  },
+  "body": {
+    
+<#if (ctx.IdProcess)?has_content>
+"IdProcess": "${ctx.IdProcess}",
+</#if> 
+<#if ctx.Process?has_content> 
+"Process": "${ctx.Process}", 
+</#if>
+<#if (ctx.DateProcess)?has_content>
+"DateProcess": "${ctx.DateProcess}",
+</#if> 
+<#if (ctx.Status)?has_content>
+"Status": "${ctx.Status}",
+</#if> 
+<#if (ctx.ProcessMessage)?has_content>
+"ProcessMessage": "${ctx.ProcessMessage}"
+</#if> 
+}
+  }
+]]></format>
+                <args/>
+            </payloadFactory>
+        </case>
+        <default>
+            <sequence key="GetNotifactionSISEFaultSequence"/>
+        </default>
+    </switch>
+    <respond/>
+</sequence>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="GetDocumentsSOATPolicyInSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log>
+        <property name="SeqName" value="GetDocumentsSOATPolicyInSequence"/>
+    </log>
+    <propertyGroup>
+        <property expression="get-property('uri.var.plate')" name="plate" scope="default" type="STRING"/>
+        <property expression="get-property('uri.var.idnumber')" name="idNumber" scope="default" type="STRING"/>
+        <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+        <property name="categoria" scope="default" type="STRING" value="Error Técnico"/>
+    </propertyGroup>
+    <filter regex="^0\.0" source="fn:string-length(get-property('idTransaccion'))">
+        <then>
+            <property expression="fn:substring-after(get-property('MessageID'),':uuid:')" name="idTransaccion" scope="default" type="STRING"/>
+        </then>
+        <else/>
+    </filter>
+    <payloadFactory media-type="xml">
+        <format>
+            <v1:DescargarPolizaSOAT xmlns:v1="http://AXA.SOAT.Tarea.DescargaPolizaSOAT.Schemas/DescargaPolizaSOAT/V1.0">
+                <v1:Header>
+                    <v1:IdCorrelacionConsumidor>$1</v1:IdCorrelacionConsumidor>
+                    <v1:IdTransaccion>$1</v1:IdTransaccion>
+                    <v1:PeticionFecha>$2</v1:PeticionFecha>
+                    <v1:Canal>Online</v1:Canal>
+                    <v1:Usuario>SBC</v1:Usuario>
+                    <v1:Clave/>
+                </v1:Header>
+                <v1:Body>
+                    <v1:NoDocumento>$3</v1:NoDocumento>
+                    <v1:NoPlaca>$4</v1:NoPlaca>
+                </v1:Body>
+            </v1:DescargarPolizaSOAT>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="get-property('idTransaccion')"/>
+            <arg evaluator="xml" expression="get-property('currentDate')"/>
+            <arg evaluator="xml" expression="get-property('idNumber')"/>
+            <arg evaluator="xml" expression="get-property('plate')"/>
+        </args>
+    </payloadFactory>
+    <log>
+        <property expression="$body" name="PayloadReq"/>
+    </log>
+    <property name="SOAPAction" scope="transport" type="STRING" value="Tarea.DescargarPolizaSOAT.Service/IDescargaPolizaSOAT/DescargarPolizaSOAT"/>
+    <send>
+        <endpoint key="SBCSOATPolicyDataEndPoint"/>
+    </send>
+</sequence>
